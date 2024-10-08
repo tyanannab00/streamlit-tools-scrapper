@@ -6,7 +6,8 @@ from telegram import Bot
 
 # Konfigurasi
 tokenBot = '7043239270:AAGxyI0mfQi1aAiGeHBabUXZ5c54Hysx0Vc'
-chat_id = '1150712588'
+chat_id = '-1002202267314'
+thread_id = 2
 nsq_address = 'http://192.168.21.200:4161'
 target_hostnames = [
     'master.kubernetes.test',
@@ -27,7 +28,8 @@ def send_telegram_message(message):
     url = f"https://api.telegram.org/bot{tokenBot}/sendMessage"
     payload = {
         'chat_id': chat_id,
-        'text': message
+        'text': message,
+        'message_thread_id': thread_id
     }
     headers = {
         'Content-Type': 'application/json'
@@ -66,6 +68,7 @@ def find_missing_hosts(current_hosts, target_hostnames, target_broadcast_address
 
     return missing_hostnames, missing_broadcast_addresses
 
+
 def monitor_nsqd(): #pakein parameter test_mode=False buat test alert
     # while True:
     #     nsqd_hosts = check_nsqd_hosts()
@@ -88,7 +91,7 @@ def monitor_nsqd(): #pakein parameter test_mode=False buat test alert
                 if missing_details:
                     missing_details += " | "
                 missing_details += f"Missing Broadcast Addresses: {', '.join(missing_broadcast_addresses)}"
-            alert_message = f"Alert: {missing_details} are currently unavailable!"
+            alert_message = f"Ada Nodes yang ilang Wak !! \n\n{missing_details}"
             print(alert_message)  # Debug print
             send_telegram_message(alert_message)
         else:
